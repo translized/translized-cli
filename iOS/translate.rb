@@ -34,14 +34,13 @@ def http_download_uri(uri, dirname, filename, token)
 end
 
 projectId = ARGV[0]
-exportFormat = ARGV[1]
-token = ARGV[2]
-destination = ARGV[3]
+token = ARGV[1]
+destination = ARGV[2]
 uri = URI("http://translized.eu-4.evennode.com/projects/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)
-request.body = {projectId: projectId, exportFormat: exportFormat}.to_json
+request.body = {projectId: projectId, exportFormat: "strings"}.to_json
 
 http = Net::HTTP.new(uri.host, uri.port)
 # http.use_ssl = true
