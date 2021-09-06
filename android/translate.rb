@@ -36,6 +36,14 @@ end
 projectId = ARGV[0]
 token = ARGV[1]
 destination = ARGV[2]
+if projectId.nil?
+  puts "Please input project Id."
+  return
+end
+if token.nil?
+  puts "Please input API token."
+  return
+end
 uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
