@@ -37,11 +37,11 @@ projectId = ARGV[0]
 token = ARGV[1]
 destination = ARGV[2]
 if projectId.nil?
-  puts "Please input project Id."
+  puts "Please input project Id as first argument."
   return
 end
 if token.nil?
-  puts "Please input API token."
+  puts "Please input API token as second argument."
   return
 end
 uri = URI("https://translized.eu-4.evennode.com/project/exportAll")

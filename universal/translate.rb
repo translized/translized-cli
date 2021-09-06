@@ -30,15 +30,15 @@ token = ARGV[1]
 fileFormat = ARGV[2]
 destination = ARGV[3]
 if projectId.nil?
-  puts "Please input project Id."
+  puts "Please input project Id as first argument."
   return
 end
 if token.nil?
-  puts "Please input API token."
+  puts "Please input API token as second argument."
   return
 end
 if fileFormat.nil?
-  puts "Please input export format."
+  puts "Please input export format as third argument."
   return
 end
 uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
