@@ -40,7 +40,7 @@ uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)
-request.body = {projectId: projectId, exportFormat: "strings"}.to_json
+request.body = {projectId: projectId, exportFormat: "xml"}.to_json
 
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
@@ -57,9 +57,9 @@ if response.code == "200" then
       locale, url = language.first
       puts locale
       uriLocale = URI(url["fileURL"])
-      dirname = locale + ".lproj"
+      dirname = "values-" + locale
       create_directory(dirname)
-      http_download_uri(uriLocale, dirname, "Localizable.strings", token)
+      http_download_uri(uriLocale, dirname, "strings.xml", token)
   }
 elsif response.code != "200"
   puts jsonResponse["error"]
