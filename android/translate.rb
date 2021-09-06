@@ -65,7 +65,7 @@ if response.code == "200" then
       locale, url = language.first
       puts locale
       uriLocale = URI(url["fileURL"])
-      dirname = "values-" + locale
+      dirname = locale == "en" ? "values" : "values-" + locale
       create_directory(dirname)
       http_download_uri(uriLocale, dirname, "strings.xml", token)
   }
