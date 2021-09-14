@@ -1,0 +1,63 @@
+#!/bin/bash -e +x
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    -e|--type)
+      type="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -s|--projectId)
+      projectId="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -l|--token)
+      token="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --destination)
+      destination="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    *)    # unknown option
+      shift # past argument
+      ;;
+  esac
+done
+
+if [ -z $type ]; 
+then 
+echo "Please provide platform type (iOS, android, universal). Argument: --type";
+exit 1
+fi
+
+if [ -z $projectId ]; 
+then 
+echo "Please provide Project ID. Argument: --projectId";
+exit 1
+fi
+
+if [ -z $token ]; 
+then 
+echo "Please provide API token. Argument: --token";
+exit 1
+fi
+
+if [ -z $destination ]; 
+then 
+echo "Please provide file destination. Argument: --destination";
+exit 1
+fi
+
+case $type in
+   "iOS") ruby iOS/translate.rb $projectId $token $destination 
+   ;;
+   "android") ruby android/translate.rb $projectId $token $destination 
+   ;;
+   *) ruby universal/translate.rb $projectId $token $destination 
+   ;;
+esac

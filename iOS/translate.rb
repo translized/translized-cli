@@ -58,7 +58,8 @@ jsonResponse = JSON.parse(response.body)
 if response.code == "200" then
   puts "Downloading localizations"
   if destination
-      Dir.chdir destination
+    create_directory(destination)
+    Dir.chdir destination
   end
   
   jsonResponse["result"].each { |language|
