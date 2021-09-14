@@ -31,7 +31,7 @@ done
 
 if [ -z $type ]; 
 then 
-echo "Please provide platform type (iOS, android, universal). Argument: --type";
+echo "Please provide asd platform type (iOS, android, universal). Argument: --type";
 exit 1
 fi
 
@@ -53,11 +53,12 @@ echo "Please provide file destination. Argument: --destination";
 exit 1
 fi
 
+APP_HOME="`pwd -P`";
 case $type in
-   "iOS") ruby iOS/translate.rb $projectId $token $destination 
+   "iOS") ruby $APP_HOME/iOS/translate.rb $projectId $token $destination 
    ;;
-   "android") ruby android/translate.rb $projectId $token $destination 
+   "android") ruby $APP_HOME/android/translate.rb $projectId $token $destination 
    ;;
-   *) ruby universal/translate.rb $projectId $token $destination 
+   *) ruby $APP_HOME/universal/translate.rb $projectId $token $destination 
    ;;
 esac
