@@ -53,11 +53,13 @@ echo "Please provide file destination. Argument: --destination";
 exit 1
 fi
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 case $type in
-   "iOS") ruby iOS/translate.rb $projectId $token $destination 
+   "iOS") ruby $SCRIPT_DIR/iOS/translate.rb $projectId $token $destination 
    ;;
-   "android") ruby android/translate.rb $projectId $token $destination 
+   "android") $SCRIPT_DIR/ruby android/translate.rb $projectId $token $destination 
    ;;
-   *) ruby universal/translate.rb $projectId $token $destination 
+   *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $destination 
    ;;
 esac
