@@ -23,6 +23,11 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    --fileFormat)
+      fileFormat="$2"
+      shift # past argument
+      shift # past value
+      ;;
     *)    # unknown option
       shift # past argument
       ;;
@@ -53,6 +58,14 @@ echo "Please provide file destination. Argument: --destination";
 exit 1
 fi
 
+if [ "$type" = "universal" ]; then 
+    if [ -z $fileFormat ]; 
+    then 
+    echo "Please provide file export format (json, xml, strings, xlsx, csv, properties, php). Argument: --fileFormat";
+    exit 1
+    fi
+fi;
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 case $type in
@@ -60,6 +73,6 @@ case $type in
    ;;
    "android") $SCRIPT_DIR/ruby android/translate.rb $projectId $token $destination 
    ;;
-   *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $destination 
+   *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $fileFormat $destination 
    ;;
 esac

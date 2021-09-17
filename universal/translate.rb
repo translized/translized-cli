@@ -2,6 +2,14 @@ require 'net/http'
 require 'json'
 require 'fileutils'
 
+def create_directory(dirname)
+  unless Dir.exists?(dirname)
+    Dir.mkdir(dirname)
+  else
+    puts "Skipping creating directory " + dirname + ". It already exists."
+  end
+end
+
 def http_download_uri(uri, filename, token)
   puts "Starting HTTP download for: " + uri.to_s
   http_object = Net::HTTP.new(uri.host, uri.port)
