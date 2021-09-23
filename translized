@@ -66,12 +66,17 @@ if [ "$type" = "universal" ]; then
     fi
 fi;
 
+if [ "$type" != "universal" ] && [ "$type" != "iOS" ] && [ "$type" != "android" ]; then 
+    echo "Please provide platform type from the list (iOS, android, universal).";
+    exit 1
+fi;
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 case $type in
    "iOS") ruby $SCRIPT_DIR/iOS/translate.rb $projectId $token $destination 
    ;;
-   "android") $SCRIPT_DIR/ruby android/translate.rb $projectId $token $destination 
+   "android") ruby $SCRIPT_DIR/android/translate.rb $projectId $token $destination 
    ;;
    *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $fileFormat $destination 
    ;;

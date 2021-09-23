@@ -11,7 +11,6 @@ def create_directory(dirname)
 end
 
 def http_download_uri(uri, filename, token)
-  puts "Starting HTTP download for: " + uri.to_s
   http_object = Net::HTTP.new(uri.host, uri.port)
   http_object.use_ssl = true if uri.scheme == 'https'
   begin
