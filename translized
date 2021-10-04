@@ -61,7 +61,7 @@ fi
 if [ "$type" = "universal" ]; then 
     if [ -z $fileFormat ]; 
     then 
-    echo "Please provide file export format (json, xml, strings, xlsx, csv, properties, php). Argument: --fileFormat";
+    echo "Please provide file export format (json, xml, strings, xlsx, csv, properties, php, xlf). Argument: --fileFormat";
     exit 1
     fi
 fi;
