@@ -1,5 +1,13 @@
 #!/bin/bash -e +x
 
+func="$1"
+if [ "$func" != "download" ] && [ "$func" != "upload" ]; then
+  echo "Please specify function (download, upload).";
+  exit 1
+fi;
+
+
+if [ "$func" == "download" ]; then
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
@@ -81,3 +89,63 @@ case $type in
    *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $fileFormat $destination 
    ;;
 esac
+fi;
+
+if [ "$func" == "upload" ]; then
+  while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    -s|--projectId)
+      projectId="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -l|--token)
+      token="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --filePath)
+      filePath="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --languageCode)
+      languageCode="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    *)    # unknown option
+      shift # past argument
+      ;;
+  esac
+done
+
+if [ -z $projectId ]; 
+then 
+echo "Please provide Project ID. Argument: --projectId";
+exit 1
+fi
+
+if [ -z $token ]; 
+then 
+echo "Please provide API token. Argument: --token";
+exit 1
+fi
+
+if [ -z $filePath ]; 
+then 
+echo "Please provide file path. Argument: --filePath";
+exit 1
+fi
+
+if [ -z $languageCode ]; 
+then 
+echo "Please provide language code. Argument: --languageCode";
+exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ruby $SCRIPT_DIR/upload/upload.rb $projectId $token $filePath $languageCode 
+
+fi;
