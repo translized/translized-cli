@@ -1,27 +1,30 @@
 require 'net/http'
 require 'json'
 require 'fileutils'
+require 'yaml'
 
-projectId = ARGV[0]
-token = ARGV[1]
-filePath = ARGV[2]
-languageCode = ARGV[3]
+config = YAML.load(File.read(".translized.yml"))
+projectId = config[:translized][:project_id]
+token = config[:translized][:access_token]
+filePath = config[:translized][:upload][:path]
+languageCode = config[:translized][:upload][:language_code]
+
 if projectId.nil?
-  puts "Please input project Id as first argument."
+  puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
   return
 end
 if token.nil?
-  puts "Please input API token as second argument."
+  puts "\e[31m#{"Please input access_token in .translized.yml file"}\e[0m"
   return
 end
 if filePath.nil?
-  puts "Please input file path as third argument."
+  puts "\e[31m#{"Please input upload file path in .translized.yml file"}\e[0m"
   return
 end
 if languageCode.nil?
-    puts "Please input language code as fourth argument."
+    puts "\e[31m#{"Please input language code of upload file in .translized.yml file"}\e[0m"
     return
-  end
+end
 
 uri = URI("https://translized.eu-4.evennode.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
@@ -35,6 +38,7 @@ response = http.request(request)
 jsonResponse = JSON.parse(response.body)
 if response.code == "201" then
   puts "Uploaded file. Importing translations..."
+  puts ""
 
   uriImport = URI("https://translized.eu-4.evennode.com/import")
   requestImport = Net::HTTP::Post.new(uriImport)
@@ -47,12 +51,13 @@ if response.code == "201" then
   responseImport = httpImport.request(requestImport)
   jsonResponseImport = JSON.parse(responseImport.body)
   if responseImport.code == "200" then
-    puts "Total parsed: " + jsonResponseImport["result"]["totalParsed"].to_s
-    puts "Total added: " + jsonResponseImport["result"]["totalAdded"].to_s
+    puts "\e[32m#{"Total parsed: " + jsonResponseImport["result"]["totalParsed"].to_s}\e[0m"
+    puts "\e[32m#{"Total added: " + jsonResponseImport["result"]["totalAdded"].to_s}\e[0m"
+    puts ""
   elsif responseImport.code != "200"
-    puts jsonResponseImport["error"]
+    puts puts "\e[31m#{jsonResponseImport["error"]}\e[0m"
   end
 
 elsif response.code != "201"
-  puts jsonResponse["error"]
+  puts puts "\e[31m#{jsonResponse["error"]}\e[0m"
 end

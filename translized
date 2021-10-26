@@ -1,151 +1,39 @@
 #!/bin/bash -e +x
 
 func="$1"
-if [ "$func" != "download" ] && [ "$func" != "upload" ]; then
-  echo "Please specify function (download, upload).";
+
+if [ "$func" == "" ] || [ "$func" == "--help" ]; then
+  echo "The API allows you to import locale files, download locale files or interact in other ways with the localization data stored in Translized for your account.
+
+Usage:
+translized [command]
+
+Available Commands:
+init                    Configure your Translized client
+download                Download translation changes
+upload                  Upload translation changes";
+exit 1
+fi;
+
+if [ "$func" != "download" ] && [ "$func" != "upload" ] && [ "$func" != "init" ]; then
+  echo "Run 'translized --help' for usage.";
+  echo "Error: unknown command "$func" for translized.";
   exit 1
 fi;
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+# Init
+if [ "$func" == "init" ]; then
+ruby $SCRIPT_DIR/init/init.rb
+fi;
+
+# Download
 if [ "$func" == "download" ]; then
-while [[ $# -gt 0 ]]; do
-  key="$1"
-  case $key in
-    -e|--type)
-      type="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    -s|--projectId)
-      projectId="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    -l|--token)
-      token="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --destination)
-      destination="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --fileFormat)
-      fileFormat="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    *)    # unknown option
-      shift # past argument
-      ;;
-  esac
-done
-
-if [ -z $type ]; 
-then 
-echo "Please provide platform type (iOS, android, universal). Argument: --type";
-exit 1
-fi
-
-if [ -z $projectId ]; 
-then 
-echo "Please provide Project ID. Argument: --projectId";
-exit 1
-fi
-
-if [ -z $token ]; 
-then 
-echo "Please provide API token. Argument: --token";
-exit 1
-fi
-
-if [ -z $destination ]; 
-then 
-echo "Please provide file destination. Argument: --destination";
-exit 1
-fi
-
-if [ "$type" = "universal" ]; then 
-    if [ -z $fileFormat ]; 
-    then 
-    echo "Please provide file export format (json, xml, strings, xlsx, csv, properties, php, xlf). Argument: --fileFormat";
-    exit 1
-    fi
+ruby $SCRIPT_DIR/download/download.rb
 fi;
 
-if [ "$type" != "universal" ] && [ "$type" != "iOS" ] && [ "$type" != "android" ]; then 
-    echo "Please provide platform type from the list (iOS, android, universal).";
-    exit 1
-fi;
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
-case $type in
-   "iOS") ruby $SCRIPT_DIR/iOS/translate.rb $projectId $token $destination 
-   ;;
-   "android") ruby $SCRIPT_DIR/android/translate.rb $projectId $token $destination 
-   ;;
-   *) ruby $SCRIPT_DIR/universal/translate.rb $projectId $token $fileFormat $destination 
-   ;;
-esac
-fi;
-
+# Upload
 if [ "$func" == "upload" ]; then
-  while [[ $# -gt 0 ]]; do
-  key="$1"
-  case $key in
-    -s|--projectId)
-      projectId="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    -l|--token)
-      token="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --filePath)
-      filePath="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --languageCode)
-      languageCode="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    *)    # unknown option
-      shift # past argument
-      ;;
-  esac
-done
-
-if [ -z $projectId ]; 
-then 
-echo "Please provide Project ID. Argument: --projectId";
-exit 1
-fi
-
-if [ -z $token ]; 
-then 
-echo "Please provide API token. Argument: --token";
-exit 1
-fi
-
-if [ -z $filePath ]; 
-then 
-echo "Please provide file path. Argument: --filePath";
-exit 1
-fi
-
-if [ -z $languageCode ]; 
-then 
-echo "Please provide language code. Argument: --languageCode";
-exit 1
-fi
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-ruby $SCRIPT_DIR/upload/upload.rb $projectId $token $filePath $languageCode 
-
+ruby $SCRIPT_DIR/upload/upload.rb
 fi;
