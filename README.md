@@ -13,19 +13,22 @@ brew install translized-cli
 
 Usage:
 1. Open Terminal and navigate to root folder of your project.
-2. run `translized --type [type] --projectId [projectId] --token [token] --destination [destination] --fileFormat [fileFormat]` where
-    - type is type of platform (iOS, android, universal). If universal is selected make sure to specify fileFormat.
-    - projectId is id of your project
-    - api-token is your API token
-    - destination is path to the folder where files will be downloaded. 
-        - If type is iOS files will be in {locale}.lproj folders as per iOS preferences. Example: */{destination}/en.lproj/Localized.strings*
-        - If type is android files will be in value-{locale} folders as per Android preferences. Examples: 
-            - Primary language: */{destination}/values/strings.xml*
-            - others: */{destination}/values-de/strings.xml*
-        - If type is universal files will be in format {locale}.{fileFormat}. Example: */{destination}/en.json*
-    - fileFormat is format of file you want. Specify only if type is universal. Supported files are: .json, .strings, .xml, .xlsx, .csv, .properties, .php.
+    ```
+    cd /path/to/project
+    ```
+2. Initialize your project by executing the `init` command. This lets you define your preferred locale file format, download, upload files and more.
+    ```
+    translized init
+    ```
+3. Use the upload command to `upload` your locale file from your defined sources:
+    ```
+    translized upload
+    ```
+4. Use the download command to `download` the most recent locale files back into your project:
+    ```
+    translized download
+    ```
 
-    Example: `translized --type iOS --projectId SLueUPR7Mg --token 42cf5fec-a74c-4a53-8ebc-86a4e52b --destination Resources/Localization`
 
 
 # Manual installation
