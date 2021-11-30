@@ -8,13 +8,17 @@ projectId = gets.chomp
 
 # File formats
 file_formats_arr = [ 
-    {"name" => 'json', "desc" => 'Key value JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
-    {"name" => 'strings', "desc" => 'iOS Localizable Strings, file extension: strings', "defaultDownload" => './<locale_code>.lproj/Localizable.strings'},
-    {"name" => 'xml', "desc" => 'Android Strings, file extension: xml', "defaultDownload" => './values-<locale_code>/strings.xml'},
-    {"name" => 'xlsx', "desc" => 'Excel XLSX, file extension: xlsx', "defaultDownload" => './<locale_code>.xlsx'},
-    {"name" => 'csv', "desc" => 'CSV, file extension: csv', "defaultDownload" => './<locale_code>.csv'},
-    {"name" => 'properties', "desc" => 'Java Properties .properties, file extension: properties', "defaultDownload" => './MessagesBundle_<locale_code>.properties'},
-    {"name" => 'xlf', "desc" => 'XLIFF, file extension: xlf', "defaultDownload" => './<locale_code>.xlf'},
+    {"name" => 'json', "format" => 'json', "desc" => 'Key value JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
+    {"name" => 'strings', "format" => 'strings', "desc" => 'iOS Localizable Strings, file extension: strings', "defaultDownload" => './<locale_code>.lproj/Localizable.strings'},
+    {"name" => 'xml', "format" => 'xml', "desc" => 'Android Strings, file extension: xml', "defaultDownload" => './values-<locale_code>/strings.xml'},
+    {"name" => 'xlsx', "format" => 'xlsx', "desc" => 'Excel XLSX, file extension: xlsx', "defaultDownload" => './<locale_code>.xlsx'},
+    {"name" => 'csv', "format" => 'csv', "desc" => 'CSV, file extension: csv', "defaultDownload" => './<locale_code>.csv'},
+    {"name" => 'properties', "format" => 'properties', "desc" => 'Java Properties .properties, file extension: properties', "defaultDownload" => './MessagesBundle_<locale_code>.properties'},
+    {"name" => 'xlf', "format" => 'xlf', "desc" => 'XLIFF, file extension: xlf', "defaultDownload" => './<locale_code>.xlf'},
+    {"name" => 'yml', "format" => 'yml', "desc" => 'Ruby/Rails YAML, file extension: yml', "defaultDownload" => './config/locales/<locale_code>.yml'},
+    {"name" => 'yml_symfony', "format" => 'yml', "desc" => 'Symfony YAML, file extension: yml', "defaultDownload" => './app/Resources/translations/<locale_code>.yml'},
+    {"name" => 'resx', "format" => 'resx', "desc" => '.NET ResX, file extension: resx', "defaultDownload" => './<locale_code>.resx'},
+    {"name" => 'arb', "format" => 'arb', "desc" => 'ARB, file extension: arb', "defaultDownload" => './<locale_code>.arb'},
 ]
 
 puts "\n"
@@ -64,7 +68,7 @@ File.open('.translized.yml', 'w') do |file|
             'project_id': projectId,
             'download': {
                 'path': downloadDestination,
-                'file_format': file_format["name"]
+                'file_format': file_format["format"]
             },
             'upload': {
                 'path': upload_destination,
