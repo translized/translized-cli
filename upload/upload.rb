@@ -8,6 +8,7 @@ projectId = config[:translized][:project_id]
 token = config[:translized][:access_token]
 filePath = config[:translized][:upload][:path]
 languageCode = config[:translized][:upload][:language_code]
+isNested = config[:translized][:upload]["isNested"] || false
 
 if projectId.nil?
   puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
@@ -44,7 +45,7 @@ if response.code == "201" then
   requestImport = Net::HTTP::Post.new(uriImport)
   requestImport.add_field("Content-Type", "application/json")
   requestImport.add_field("api-token", token)
-  requestImport.body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"]}.to_json
+  requestImport.body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}.to_json
 
   httpImport = Net::HTTP.new(uriImport.host, uriImport.port)
   httpImport.use_ssl = true

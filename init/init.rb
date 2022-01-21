@@ -9,6 +9,7 @@ projectId = gets.chomp
 # File formats
 file_formats_arr = [ 
     {"name" => 'json', "format" => 'json', "desc" => 'Key value JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
+    {"name" => 'nested_json', "format" => 'json', "desc" => 'Nested JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
     {"name" => 'strings', "format" => 'strings', "desc" => 'iOS Localizable Strings, file extension: strings', "defaultDownload" => './<locale_code>.lproj/Localizable.strings'},
     {"name" => 'xml', "format" => 'xml', "desc" => 'Android Strings, file extension: xml', "defaultDownload" => './values-<locale_code>/strings.xml'},
     {"name" => 'xlsx', "format" => 'xlsx', "desc" => 'Excel XLSX, file extension: xlsx', "defaultDownload" => './<locale_code>.xlsx'},
@@ -32,7 +33,7 @@ while $i <= file_formats_arr.length()  do
 end
 file_format_num = 0
 while file_format_num < 1 || file_format_num > 11 do
-print "Select the format to use for language files you download from Translized (1-11): "
+print "Select the format to use for language files you download from Translized (1-12): "
 file_format_num = gets.chomp.to_i
 end
 file_format = file_formats_arr[file_format_num - 1]
@@ -62,18 +63,24 @@ upload_language_code = upload_language_code == '' ? "en" : upload_language_code
 puts ""
 
 File.open('.translized.yml', 'w') do |file|
+    download = {
+        'path': downloadDestination,
+        'file_format': file_format["format"]
+    }
+    upload = {
+        'path': upload_destination,
+        'language_code': upload_language_code
+    }
+    if file_format["name"] == 'nested_json' then 
+        download["isNested"] = true
+        upload["isNested"] = true
+    end
     config = {
         'translized': {
             'access_token': token,
             'project_id': projectId,
-            'download': {
-                'path': downloadDestination,
-                'file_format': file_format["format"]
-            },
-            'upload': {
-                'path': upload_destination,
-                'language_code': upload_language_code
-            }
+            'download': download,
+            'upload': upload
         }
     }
     file.write(config.to_yaml)

@@ -36,6 +36,7 @@ projectId = config[:translized][:project_id]
 token = config[:translized][:access_token]
 fileFormat = config[:translized][:download][:file_format]
 downloadPath = config[:translized][:download][:path]
+isNested = config[:translized][:download]["isNested"] || false
 if projectId.nil?
   puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
   return
@@ -56,7 +57,7 @@ uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)
-request.body = {projectId: projectId, exportFormat: fileFormat}.to_json
+request.body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested}.to_json
 
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
