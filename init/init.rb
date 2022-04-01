@@ -32,8 +32,8 @@ while $i <= file_formats_arr.length()  do
     $i +=1
 end
 file_format_num = 0
-while file_format_num < 1 || file_format_num > 11 do
-print "Select the format to use for language files you download from Translized (1-12): "
+while file_format_num < 1 || file_format_num > file_formats_arr.length() do
+print "Select the format to use for language files you download from Translized (1-#{file_formats_arr.length()}): "
 file_format_num = gets.chomp.to_i
 end
 file_format = file_formats_arr[file_format_num - 1]
