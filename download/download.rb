@@ -37,6 +37,7 @@ token = config[:translized][:access_token]
 fileFormat = config[:translized][:download][:file_format]
 downloadPath = config[:translized][:download][:path]
 isNested = config[:translized][:download]["isNested"] || false
+downloadOptions = config[:translized][:download]["options"]
 if projectId.nil?
   puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
   return
@@ -53,11 +54,34 @@ if downloadPath.nil?
   puts "\e[31m#{"Please input download path in .translized.yml file"}\e[0m"
   return
 end
-uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
+uri = URI("https://api.translized.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)
-request.body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested}.to_json
+body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested};
+unless downloadOptions.nil?
+  unless downloadOptions["replace_empty"].nil?
+    replace_empty = downloadOptions["replace_empty"]
+    if replace_empty[:primary_translations] == true then
+      body["replaceEmptyWithPrimaryTranslations"] = true
+    end
+    if replace_empty[:pseudolocalization] == true then
+      increase_percentage = replace_empty[:increase_percentage]
+      if increase_percentage.nil?
+        puts "\e[31m#{"Please input increase_percentage in .translized.yml file"}\e[0m"
+        return
+      end
+      body["replaceEmptyWithPseudolocalization"] = {"increasePercentage": increase_percentage}
+    end
+  end
+  unless downloadOptions["transform_placeholders_iOS_android"].nil?
+    if downloadOptions["transform_placeholders_iOS_android"] == true then
+      body["transformPlaceholdersiOSAndroid"] = true
+    end
+  end
+end
+
+request.body = body.to_json
 
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true

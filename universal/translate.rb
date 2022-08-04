@@ -48,7 +48,7 @@ if fileFormat.nil?
   puts "Please input export format as third argument."
   return
 end
-uri = URI("https://translized.eu-4.evennode.com/project/exportAll")
+uri = URI("https://api.translized.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)

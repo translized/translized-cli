@@ -62,6 +62,38 @@ upload_language_code = gets.chomp
 upload_language_code = upload_language_code == '' ? "en" : upload_language_code
 puts ""
 
+add_additional_options = "s"
+while add_additional_options != "y" && add_additional_options != "n" do
+    print "Set additional download options?: [y/n]"
+    add_additional_options = gets.chomp
+end
+puts ""
+
+download_option = 0
+increase_percentage = 20
+if add_additional_options == 'y' then 
+    print "Download options:\n"
+    print "1: Replace empty translations with primary language translations\n"
+    print "2: Replace empty translations with pseudolocalized translations of primary language\n"
+    print "3: None\n"
+    
+    while download_option < 1 || download_option > 3 do
+        print "Select the download options: (1-3):"
+        download_option = gets.chomp.to_i
+    end
+    puts ""
+
+    if download_option == 2 then
+        print "Enter increase percentage for pseudolocalization: [default 20]"
+        percentage = gets.chomp.to_i
+        unless percentage.nil? || percentage == 0
+            increase_percentage = percentage
+        end
+    end
+
+    
+end
+
 File.open('.translized.yml', 'w') do |file|
     download = {
         'path': downloadDestination,
@@ -75,6 +107,26 @@ File.open('.translized.yml', 'w') do |file|
         download["isNested"] = true
         upload["isNested"] = true
     end
+
+    download_options = {}
+    if file_format["name"] == 'strings' || file_format["name"] == 'xml' then 
+        download_options["transform_placeholders_iOS_android"] = true
+    end
+    if download_option == 1 then
+        download_options["replace_empty"] = {
+            "primary_translations": true
+        }
+    end
+    if download_option == 2 then
+        download_options["replace_empty"] = {
+            "pseudolocalization": true,
+            "increase_percentage": increase_percentage
+        }
+    end
+    unless download_options.empty?
+        download["options"] = download_options
+    end
+
     config = {
         'translized': {
             'access_token': token,

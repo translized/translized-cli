@@ -27,7 +27,7 @@ if languageCode.nil?
     return
 end
 
-uri = URI("https://translized.eu-4.evennode.com/upload/" + File.basename(filePath))
+uri = URI("https://api.translized.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
 request.body = ""
 request.body << File.read(filePath)
@@ -41,7 +41,7 @@ if response.code == "201" then
   puts "Uploaded file. Importing translations..."
   puts ""
 
-  uriImport = URI("https://translized.eu-4.evennode.com/import")
+  uriImport = URI("https://api.translized.com/import")
   requestImport = Net::HTTP::Post.new(uriImport)
   requestImport.add_field("Content-Type", "application/json")
   requestImport.add_field("api-token", token)
