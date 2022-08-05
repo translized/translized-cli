@@ -64,7 +64,7 @@ puts ""
 
 add_additional_options = "s"
 while add_additional_options != "y" && add_additional_options != "n" do
-    print "Set additional download options?: [y/n]"
+    print "Configure additional download options?: [y/n] "
     add_additional_options = gets.chomp
 end
 puts ""
@@ -78,13 +78,13 @@ if add_additional_options == 'y' then
     print "3: None\n"
     
     while download_option < 1 || download_option > 3 do
-        print "Select the download options: (1-3):"
+        print "Select the download options: (1-3): "
         download_option = gets.chomp.to_i
     end
     puts ""
 
     if download_option == 2 then
-        print "Enter increase percentage for pseudolocalization: [default 20]"
+        print "Enter increase percentage for pseudolocalization: [default 20] "
         percentage = gets.chomp.to_i
         unless percentage.nil? || percentage == 0
             increase_percentage = percentage
@@ -143,6 +143,14 @@ puts "\e[32m#{"You can now use the download & upload commands in your workflow:"
 puts ""
 puts "$ translized download
 $ translized upload"
+puts ""
+puts "\e[32m#{"Upload command can be used with additional options for:"}\e[0m"
+puts "- overriding existing translations (-o true)
+- tagging all new keys (-n TAG_NAME)
+- tagging all updated keys (-u TAG_NAME)
+"
+puts ""
+puts "$ translized upload -o true -u UPDATED_KEYS_TAG -n NEW_KEYS_TAG"
 puts ""
 puts "\e[32m#{"Project initialization completed!"}\e[0m"
 puts ""

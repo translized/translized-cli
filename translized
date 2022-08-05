@@ -10,8 +10,10 @@ translized [command]
 
 Available Commands:
 init                    Configure your Translized client
-download                Download translation changes
-upload                  Upload translation changes";
+download                Download translation files
+upload                  Upload configured translation file
+
+Use \"translized [command] --help\" for more information about a command.";
 exit 1
 fi;
 
@@ -19,6 +21,43 @@ if [ "$func" != "download" ] && [ "$func" != "upload" ] && [ "$func" != "init" ]
   echo "Run 'translized --help' for usage.";
   echo "Error: unknown command "$func" for translized.";
   exit 1
+fi;
+
+if [ "$2" == "--help" ]; then
+# Init
+if [ "$func" == "init" ]; then
+echo "Configure your Translized client, creates .yml configuration file.
+
+Usage:
+  translized init"
+fi;
+
+# Download
+if [ "$func" == "download" ]; then
+echo "Download translation files.
+
+Usage:
+  translized download
+  
+Additional download options can be configured directly in .translized.yml file or by runing \"translized init\"."
+fi;
+
+# Upload
+if [ "$func" == "upload" ]; then
+echo "Upload configured translation file.
+
+Usage:
+  translized upload [flags]
+  
+Flags:
+  -o             Override existing translations - boolean
+  -n             Tag all new keys - string
+  -u             Tag all updated keys - string
+  
+e.g. translized upload -o true -u UPDATED_KEYS_TAG -n NEW_KEYS_TAG"
+fi;
+
+exit 1
 fi;
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
