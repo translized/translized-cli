@@ -27,6 +27,16 @@ if languageCode.nil?
     return
 end
 
+overrideTranslations = ARGV[0] == 'true'
+newKeysTag = ARGV[1] == "-" ? nil : ARGV[1]
+updatedKeysTag = ARGV[2] == "-" ? nil : ARGV[2]
+unless updatedKeysTag.nil?
+  if !overrideTranslations then
+    puts "\e[31m#{"Override translations flag (-o) must be set to true so that updated keys can be tagged"}\e[0m"
+    return
+  end
+end
+
 uri = URI("https://api.translized.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
 request.body = ""
@@ -45,7 +55,17 @@ if response.code == "201" then
   requestImport = Net::HTTP::Post.new(uriImport)
   requestImport.add_field("Content-Type", "application/json")
   requestImport.add_field("api-token", token)
-  requestImport.body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}.to_json
+  body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}
+  body["overrideTranslations"] = overrideTranslations
+  unless (newKeysTag.nil? || newKeysTag.empty?) && (updatedKeysTag.nil? || updatedKeysTag.empty?)
+    processingRules = {
+      "overrideImportAutomations": true,
+      "newKeys": newKeysTag ? {"tags": [newKeysTag]} : {},
+      "updatedKeys": updatedKeysTag ? {"tags": [updatedKeysTag]} : {}
+    } 
+    body["processingRules"] = processingRules
+  end
+  requestImport.body = body.to_json
 
   httpImport = Net::HTTP.new(uriImport.host, uriImport.port)
   httpImport.use_ssl = true

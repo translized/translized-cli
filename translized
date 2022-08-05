@@ -35,5 +35,17 @@ fi;
 
 # Upload
 if [ "$func" == "upload" ]; then
-ruby $SCRIPT_DIR/upload/upload.rb
+overrideTranslations="false"
+newKeysTag="-"
+updatedKeysTag="-"
+shift 1
+while getopts o:n:u: flag
+do
+    case "${flag}" in
+        o) overrideTranslations=${OPTARG};;
+        n) newKeysTag=${OPTARG};;
+        u) updatedKeysTag=${OPTARG};;
+    esac
+done
+ruby $SCRIPT_DIR/upload/upload.rb $overrideTranslations $newKeysTag $updatedKeysTag
 fi;
