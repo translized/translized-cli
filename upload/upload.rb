@@ -7,7 +7,6 @@ config = YAML.load(File.read(".translized.yml"))
 projectId = config[:translized][:project_id]
 token = config[:translized][:access_token]
 filePath = config[:translized][:upload][:path]
-fileFormat = config[:translized][:download][:file_format]
 languageCode = config[:translized][:upload][:language_code]
 isNested = config[:translized][:upload]["isNested"] || false
 
@@ -40,7 +39,7 @@ end
 
 uri = URI("https://api.translized.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
-request["Content-Type"] = "text/" + fileFormat
+request["Content-Type"] = "text/" + File.extname(filePath).delete('.')
 request.body = ""
 request.body << File.read(filePath)
 
