@@ -11,6 +11,7 @@ file_formats_arr = [
     {"name" => 'json', "format" => 'json', "desc" => 'Key value JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
     {"name" => 'nested_json', "format" => 'json', "desc" => 'Nested JSON, file extension: json', "defaultDownload" => './<locale_code>.json'},
     {"name" => 'strings', "format" => 'strings', "desc" => 'iOS Localizable Strings, file extension: strings', "defaultDownload" => './<locale_code>.lproj/Localizable.strings'},
+    {"name" => 'stringsdict', "format" => 'stringsdict', "desc" => 'iOS Localizable Stringsdict, file extension: stringsdict', "defaultDownload" => './<locale_code>.lproj/Localizable.stringsdict'},
     {"name" => 'xml', "format" => 'xml', "desc" => 'Android Strings, file extension: xml', "defaultDownload" => './values-<locale_code>/strings.xml'},
     {"name" => 'xlsx', "format" => 'xlsx', "desc" => 'Excel XLSX, file extension: xlsx', "defaultDownload" => './<locale_code>.xlsx'},
     {"name" => 'csv', "format" => 'csv', "desc" => 'CSV, file extension: csv', "defaultDownload" => './<locale_code>.csv'},
