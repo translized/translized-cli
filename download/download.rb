@@ -38,6 +38,7 @@ fileFormat = config[:translized][:download][:file_format]
 downloadPath = config[:translized][:download][:path]
 isNested = config[:translized][:download]["isNested"] || false
 downloadOptions = config[:translized][:download]["options"]
+tags = config[:translized][:download]["tags"]
 if projectId.nil?
   puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
   return
@@ -58,7 +59,7 @@ uri = URI("https://api.translized.com/project/exportAll")
 request = Net::HTTP::Post.new(uri)
 request.add_field("Content-Type", "application/json")
 request.add_field("api-token", token)
-body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested};
+body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested, tags: tags};
 unless downloadOptions.nil?
   unless downloadOptions["replace_empty"].nil?
     replace_empty = downloadOptions["replace_empty"]
