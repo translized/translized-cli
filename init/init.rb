@@ -91,8 +91,6 @@ if add_additional_options == 'y' then
             increase_percentage = percentage
         end
     end
-
-    
 end
 
 File.open('.translized.yml', 'w') do |file|
@@ -132,7 +130,7 @@ File.open('.translized.yml', 'w') do |file|
         'translized': {
             'access_token': token,
             'project_id': projectId,
-            'download': download,
+            'download': [download],
             'upload': upload
         }
     }
