@@ -6,9 +6,17 @@ require 'yaml'
 config = YAML.load(File.read(".translized.yml"))
 projectId = config[:translized][:project_id]
 token = config[:translized][:access_token]
-filePath = config[:translized][:upload][:path]
-languageCode = config[:translized][:upload][:language_code]
-isNested = config[:translized][:upload]["isNested"] || false
+
+uploadConfig = config[:translized][:upload]
+
+if !uploadConfig.kind_of?(Array)
+  uploadConfig = [uploadConfig]
+end
+
+for upload in uploadConfig do
+filePath = upload[:path]
+languageCode = upload[:language_code]
+isNested = upload["isNested"] || false
 
 if projectId.nil?
   puts "\e[31m#{"Please input project_id in .translized.yml file"}\e[0m"
@@ -49,7 +57,8 @@ response = http.request(request)
 
 jsonResponse = JSON.parse(response.body)
 if response.code == "201" then
-  puts "Uploaded file. Importing translations..."
+  puts "Uploaded file: " + filePath
+  puts "Importing translations..."
   puts ""
 
   uriImport = URI("https://api.translized.com/import")
@@ -82,4 +91,5 @@ if response.code == "201" then
 
 elsif response.code != "201"
   puts puts "\e[31m#{jsonResponse["error"]}\e[0m"
+end
 end
