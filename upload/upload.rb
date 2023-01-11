@@ -14,8 +14,8 @@ if !uploadConfig.kind_of?(Array)
 end
 
 for upload in uploadConfig do
-filePath = upload[:path]
-languageCode = upload[:language_code]
+path = upload[:path]
+language = upload[:language_code]
 isNested = upload["isNested"] || false
 
 if projectId.nil?
@@ -26,11 +26,11 @@ if token.nil?
   puts "\e[31m#{"Please input access_token in .translized.yml file"}\e[0m"
   return
 end
-if filePath.nil?
+if path.nil?
   puts "\e[31m#{"Please input upload file path in .translized.yml file"}\e[0m"
   return
 end
-if languageCode.nil?
+if !(path.include? "<locale_code>") && language.nil?
     puts "\e[31m#{"Please input language code of upload file in .translized.yml file"}\e[0m"
     return
 end
@@ -44,6 +44,20 @@ unless updatedKeysTag.nil?
     return
   end
 end
+
+filePaths = [{"filePath": path, "languageCode": language}]
+if path.include? "<locale_code>"
+  splitedArray = path.split("<locale_code>")
+  filePaths = Dir.glob("**/*")
+  .select { |path| path.start_with?(splitedArray.first.delete_prefix("./")) && path.end_with?(splitedArray.last) }
+  .map { |path| {"filePath": path, "languageCode": path.delete_prefix(splitedArray.first.delete_prefix("./")).delete_suffix(splitedArray.last) } }
+  print filePaths
+end
+
+
+for fileObj in filePaths do
+filePath = fileObj[:filePath]
+languageCode = fileObj[:languageCode]
 
 uri = URI("https://api.translized.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
@@ -91,5 +105,6 @@ if response.code == "201" then
 
 elsif response.code != "201"
   puts puts "\e[31m#{jsonResponse["error"]}\e[0m"
+end
 end
 end
