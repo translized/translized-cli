@@ -31,7 +31,7 @@ if path.nil?
   return
 end
 if !(path.include? "<locale_code>") && language.nil?
-    puts "\e[31m#{"Please input language code of upload file in .translized.yml file"}\e[0m"
+    puts "\e[31m#{"Please input language code of upload file for path " + path + " in .translized.yml file (key: language_code)"}\e[0m"
     return
 end
 
@@ -51,7 +51,6 @@ if path.include? "<locale_code>"
   filePaths = Dir.glob("**/*")
   .select { |path| path.start_with?(splitedArray.first.delete_prefix("./")) && path.end_with?(splitedArray.last) }
   .map { |path| {"filePath": path, "languageCode": path.delete_prefix(splitedArray.first.delete_prefix("./")).delete_suffix(splitedArray.last) } }
-  print filePaths
 end
 
 
