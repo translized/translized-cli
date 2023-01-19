@@ -35,16 +35,17 @@ if !(path.include? "<locale_code>") && language.nil?
     return
 end
 
-newKeysTagsString = upload[:tags][:new_keys]
-updatedKeysTagsString = upload[:tags][:updated_keys]
+tags = upload[:tags] || {}
+newKeysTagsString = tags[:new_keys]
+updatedKeysTagsString = tags[:updated_keys]
 overrideTranslations = upload[:update_translations] == true
 newKeysTags = []
 if !newKeysTagsString.nil?
-  newKeysTags = newKeysTagsString.split(', ')
+  newKeysTags = newKeysTagsString.split(',').map(&:strip)
 end
 updatedKeysTags = []
 if !updatedKeysTagsString.nil?
-  updatedKeysTags = updatedKeysTagsString.split(', ')
+  updatedKeysTags = updatedKeysTagsString.split(',').map(&:strip)
   if !overrideTranslations then
     puts "\e[31m#{"update_translations parameter in .translized.yml must be set to true so that updated keys can be tagged"}\e[0m"
     return

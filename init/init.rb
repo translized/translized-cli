@@ -59,12 +59,12 @@ upload_destination = gets.chomp
 upload_destination = upload_destination == '' ? downloadDestination : upload_destination
 puts ""
 
-if [[ $upload_destination != *"<locale_code>"* ]]; then  
+if !(upload_destination.include? "<locale_code>")
     print "Enter the language code of the upload file: [default en] "
     upload_language_code = gets.chomp
     upload_language_code = upload_language_code == '' ? "en" : upload_language_code
     puts ""
-fi
+end
 
 add_additional_options = "s"
 while add_additional_options != "y" && add_additional_options != "n" do
@@ -103,11 +103,13 @@ File.open('.translized.yml', 'w') do |file|
     }
     upload = {
         'path': upload_destination,
-        'language_code': upload_language_code
     }
     if file_format["name"] == 'nested_json' then 
         download["isNested"] = true
         upload["isNested"] = true
+    end
+    if upload_language_code then
+        upload["language_code"] = upload_language_code
     end
 
     download_options = {}
@@ -146,13 +148,12 @@ puts ""
 puts "$ translized download
 $ translized upload"
 puts ""
-puts "\e[32m#{"Upload command can be used with additional options for:"}\e[0m"
-puts "- overriding existing translations (-o true)
-- tagging all new keys (-n TAG_NAME)
-- tagging all updated keys (-u TAG_NAME)
+puts "\e[32m#{"Set additional options for upload and download directly in configuration file:"}\e[0m"
+puts "- tags (specify which tags to download or how to tag new or updated keys on upload)
+- update_translation (specify should upload update existing translations)
 "
 puts ""
-puts "$ translized upload -o true -u UPDATED_KEYS_TAG -n NEW_KEYS_TAG"
+puts "More details and examples can be found on: https://docs.translized.com/docs/cli/basics"
 puts ""
 puts "\e[32m#{"Project initialization completed!"}\e[0m"
 puts ""

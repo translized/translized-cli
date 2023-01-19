@@ -59,7 +59,7 @@ for download in downloadConfig do
   tagsString = download[:tags]
   tags = nil
   if !tagsString.nil?
-    tags = tagsString.split(', ')
+    tags = tagsString.split(',').map(&:strip)
   end
 
   if fileFormat.nil?
