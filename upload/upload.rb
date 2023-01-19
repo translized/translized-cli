@@ -35,12 +35,18 @@ if !(path.include? "<locale_code>") && language.nil?
     return
 end
 
-overrideTranslations = ARGV[0] == 'true'
-newKeysTag = ARGV[1] == "-" ? nil : ARGV[1]
-updatedKeysTag = ARGV[2] == "-" ? nil : ARGV[2]
-unless updatedKeysTag.nil?
+newKeysTagsString = upload[:tags][:new_keys]
+updatedKeysTagsString = upload[:tags][:updated_keys]
+overrideTranslations = upload[:update_translations] == true
+newKeysTags = []
+if !newKeysTagsString.nil?
+  newKeysTags = newKeysTagsString.split(', ')
+end
+updatedKeysTags = []
+if !updatedKeysTagsString.nil?
+  updatedKeysTags = updatedKeysTagsString.split(', ')
   if !overrideTranslations then
-    puts "\e[31m#{"Override translations flag (-o) must be set to true so that updated keys can be tagged"}\e[0m"
+    puts "\e[31m#{"update_translations parameter in .translized.yml must be set to true so that updated keys can be tagged"}\e[0m"
     return
   end
 end
@@ -80,11 +86,11 @@ if response.code == "201" then
   requestImport.add_field("api-token", token)
   body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}
   body["overrideTranslations"] = overrideTranslations
-  unless (newKeysTag.nil? || newKeysTag.empty?) && (updatedKeysTag.nil? || updatedKeysTag.empty?)
+  unless newKeysTags.empty? && updatedKeysTags.empty?
     processingRules = {
       "overrideImportAutomations": true,
-      "newKeys": newKeysTag ? {"tags": [newKeysTag]} : {},
-      "updatedKeys": updatedKeysTag ? {"tags": [updatedKeysTag]} : {}
+      "newKeys": !newKeysTags.empty? ? {"tags": newKeysTags} : {},
+      "updatedKeys": !updatedKeysTags.empty? ? {"tags": updatedKeysTags} : {}
     } 
     body["processingRules"] = processingRules
   end
@@ -97,6 +103,7 @@ if response.code == "201" then
   if responseImport.code == "200" then
     puts "\e[32m#{"Total parsed: " + jsonResponseImport["result"]["totalParsed"].to_s}\e[0m"
     puts "\e[32m#{"Total added: " + jsonResponseImport["result"]["totalAdded"].to_s}\e[0m"
+    puts "\e[32m#{"Total updated: " + jsonResponseImport["result"]["totalUpdated"].to_s}\e[0m"
     puts ""
   elsif responseImport.code != "200"
     puts puts "\e[31m#{jsonResponseImport["error"]}\e[0m"

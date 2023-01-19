@@ -54,14 +54,17 @@ downloadDestination = downloadDestination == '' ? default_destination : download
 puts ""
 
 puts "Enter the path to the upload file to Translized. "
-print "Upload file path: [default " + default_upload_destination + "] "
+print "Upload file path: [default " + downloadDestination + "] "
 upload_destination = gets.chomp
-upload_destination = upload_destination == '' ? default_upload_destination : upload_destination
+upload_destination = upload_destination == '' ? downloadDestination : upload_destination
 puts ""
-print "Enter the language code of the upload file: [default en] "
-upload_language_code = gets.chomp
-upload_language_code = upload_language_code == '' ? "en" : upload_language_code
-puts ""
+
+if [[ $upload_destination != *"<locale_code>"* ]]; then  
+    print "Enter the language code of the upload file: [default en] "
+    upload_language_code = gets.chomp
+    upload_language_code = upload_language_code == '' ? "en" : upload_language_code
+    puts ""
+fi
 
 add_additional_options = "s"
 while add_additional_options != "y" && add_additional_options != "n" do
@@ -131,7 +134,7 @@ File.open('.translized.yml', 'w') do |file|
             'access_token': token,
             'project_id': projectId,
             'download': [download],
-            'upload': upload
+            'upload': [upload]
         }
     }
     file.write(config.to_yaml)
