@@ -150,7 +150,7 @@ $ translized upload"
 puts ""
 puts "\e[32m#{"Set additional options for upload and download directly in configuration file:"}\e[0m"
 puts "- tags (specify which tags to download or how to tag new or updated keys on upload)
-- update_translation (specify should upload update existing translations)
+- update_translations (specify should upload update existing translations)
 "
 puts ""
 puts "More details and examples can be found on: https://docs.translized.com/docs/cli/basics"
