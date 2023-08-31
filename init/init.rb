@@ -1,10 +1,32 @@
 require 'fileutils'
 require 'yaml'
+require 'net/http'
+require 'json'
 
 print "Please enter your API access token: "
 token = gets.chomp
 print "Please enter your projectId: "
 projectId = gets.chomp
+puts "\e[32m#{"Validating credentials..."}\e[0m"
+
+uri = URI("https://api.translized.com/project/check")
+request = Net::HTTP::Post.new(uri)
+request.add_field("Content-Type", "application/json")
+request.add_field("api-token", token)
+body = {projectId: projectId};
+
+request.body = body.to_json
+
+http = Net::HTTP.new(uri.host, uri.port)
+#   Change this
+http.use_ssl = true
+response = http.request(request)
+
+jsonResponse = JSON.parse(response.body)
+if response.code != "200" then
+    puts "\e[31m#{"Invalid projectId or api token"}\e[0m"
+    return
+end
 
 # File formats
 file_formats_arr = [ 
