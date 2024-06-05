@@ -54,6 +54,7 @@ script_dir = Dir.pwd
 for download in downloadConfig do
   fileFormat = download[:file_format]
   downloadPath = download[:path]
+  overridenProjectId = download[:project_id] || projectId
   isNested = download["isNested"] || false
   downloadOptions = download["options"]
   tagsString = download[:tags]
@@ -74,7 +75,7 @@ for download in downloadConfig do
   request = Net::HTTP::Post.new(uri)
   request.add_field("Content-Type", "application/json")
   request.add_field("api-token", token)
-  body = {projectId: projectId, exportFormat: fileFormat, isNested: isNested, tags: tags};
+  body = {projectId: overridenProjectId, exportFormat: fileFormat, isNested: isNested, tags: tags};
   unless downloadOptions.nil?
     unless downloadOptions["replace_empty"].nil?
       replace_empty = downloadOptions["replace_empty"]

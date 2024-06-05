@@ -64,6 +64,7 @@ end
 for fileObj in filePaths do
 filePath = fileObj[:filePath]
 languageCode = fileObj[:languageCode]
+overridenProjectId = fileObj[:project_id] || projectId
 
 uri = URI("https://api.translized.com/upload/" + File.basename(filePath))
 request = Net::HTTP::Post.new(uri)
@@ -85,7 +86,7 @@ if response.code == "201" then
   requestImport = Net::HTTP::Post.new(uriImport)
   requestImport.add_field("Content-Type", "application/json")
   requestImport.add_field("api-token", token)
-  body = {projectId: projectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}
+  body = {projectId: overridenProjectId, languageCode: languageCode, fileURL: jsonResponse["url"], isNested: isNested}
   body["overrideTranslations"] = overrideTranslations
   unless newKeysTags.empty? && updatedKeysTags.empty?
     processingRules = {
